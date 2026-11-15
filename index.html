@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Sistema de Venta Diaria</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A1A1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Venta Diaria">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/favicon-32.png">
+<style>
+  html,body{margin:0;height:100%;background:#1A1A1A;overflow:hidden}
+  #app{position:fixed;left:0;right:0;bottom:0;top:env(safe-area-inset-top);width:100%;height:calc(100% - env(safe-area-inset-top));border:0;background:#fff}
+  #msg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;
+       color:#fff;font:16px system-ui,sans-serif;text-align:center;padding:24px;gap:12px}
+  #msg b{color:#FF6A00}
+  #msg button{background:#FF6A00;color:#fff;border:0;border-radius:8px;padding:12px 20px;font-size:16px}
+</style>
+</head>
+<body>
+<div id="msg"></div>
+<iframe id="app" title="Sistema de Venta Diaria" allow="clipboard-write; fullscreen"></iframe>
+<script>
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWpU7EQ3KQhjKOSfb8WRSF1k7ToMevkcWNWgRWX0OXEuy7jbIsGU8SwrkGBJnbWR25Qg/exec';
+
+  var msg = document.getElementById('msg');
+  var frame = document.getElementById('app');
+  function aviso(html) { msg.innerHTML = html; msg.style.display = 'flex'; frame.style.display = 'none'; }
+
+  if (APPS_SCRIPT_URL.indexOf('/exec') === -1) {
+    aviso('<b>Falta configurar la URL</b>Abre <code>index.html</code> y pega la URL de tu implementación de Apps Script en <code>APPS_SCRIPT_URL</code>.');
+  } else if (!navigator.onLine) {
+    aviso('<b>Sin conexión</b>El sistema necesita internet para mostrar y guardar ventas.<button onclick="location.reload()">Reintentar</button>');
+  } else {
+    frame.src = APPS_SCRIPT_URL;
+  }
+  window.addEventListener('online', function () { location.reload(); });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+</script>
+</body>
+</html>
